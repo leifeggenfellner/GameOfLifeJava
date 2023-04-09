@@ -100,7 +100,7 @@ public class GameController implements Initializable {
      * grid.
      */
     public void handleStep() {
-        gameOfLife.generateNextGeneration();
+        gameOfLife.tick();
         drawGrid();
     }
 

@@ -1,5 +1,6 @@
 package game.gameoflife;
 
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -57,7 +58,7 @@ public class GameOfLife {
      * Conway's Game of
      * Life.
      */
-    public void generateNextGeneration() {
+    public void tick() {
         int[][] next = new int[rows][columns];
 
         for (int i = 0; i < rows; i++) {
@@ -113,5 +114,56 @@ public class GameOfLife {
      */
     public int[][] getGrid() {
         return grid;
+    }
+
+    /**
+     * The function sets the state of a cell in a grid, throwing an exception if the
+     * row, column, or
+     * state is invalid.
+     * 
+     * @param row    The row index of the cell in the grid that we want to set the
+     *               state of.
+     * @param column The column index of the cell whose state is being set.
+     * @param state  The state parameter represents the new state that we want to
+     *               set for a particular
+     *               cell in the grid. It can only be either 0 or 1, where 0
+     *               represents a dead cell and 1 represents
+     *               a live cell.
+     */
+    public void setCellState(int row, int column, int state) {
+        if (row < 0 || column < 0 || row >= rows || column >= columns) {
+            throw new IllegalArgumentException("Invalid row or column index");
+        }
+
+        if (state < 0 || state > 1) {
+            throw new IllegalArgumentException("Invalid cell state");
+        }
+
+        grid[row][column] = state;
+    }
+
+    /**
+     * This function returns the state of a cell in a grid given its row and column
+     * indices.
+     * 
+     * @param row    The row index of the cell in the grid.
+     * @param column The column index of the cell whose state is being retrieved
+     *               from the grid.
+     * @return The method is returning the state of the cell at the specified row
+     *         and column in the
+     *         grid.
+     */
+    public boolean getCellState(int row, int column) {
+        if (row < 0 || column < 0 || row >= rows || column >= columns) {
+            throw new IllegalArgumentException("Invalid row or column index");
+        }
+
+        return grid[row][column] != 0;
+    }
+
+    public void emptyGrid() {
+        for (int i = 0; i < rows; i++) {
+            Arrays.fill(grid[i], 0);
+        }
     }
 }

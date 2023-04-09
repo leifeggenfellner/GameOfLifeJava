@@ -7,7 +7,7 @@ public class GameOfLifeAnimationTimer extends AnimationTimer {
     private final GameOfLifeCanvas gameOfLifeCanvas;
     private final GameOfLife gameOfLife;
     private long lastUpdateTime = 0;
-    private final long timeStep = TimeUnit.MILLISECONDS.toNanos(200);
+    private final long timeStep = TimeUnit.MILLISECONDS.toNanos(125);
 
     public GameOfLifeAnimationTimer(GameOfLifeCanvas gameOfLifeCanvas, GameOfLife gameOfLife) {
         this.gameOfLifeCanvas = gameOfLifeCanvas;
@@ -17,7 +17,7 @@ public class GameOfLifeAnimationTimer extends AnimationTimer {
     @Override
     public void handle(long now) {
         if (now - lastUpdateTime >= timeStep) {
-            gameOfLife.generateNextGeneration();
+            gameOfLife.tick();
             gameOfLifeCanvas.draw(gameOfLife.getGrid());
             lastUpdateTime = now;
         }
