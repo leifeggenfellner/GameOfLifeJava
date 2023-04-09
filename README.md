@@ -36,4 +36,4 @@ The game includes a set of JUnit tests to ensure that the implementation is corr
 
 ## Authors
 
-This implementation of Conway's Game of Life was created by [Your Name Here].
+This implementation of Conway's Game of Life was created by Leif Eggenfellner.
