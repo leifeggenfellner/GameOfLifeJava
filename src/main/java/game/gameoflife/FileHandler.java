@@ -74,6 +74,34 @@ public class FileHandler implements FileHandlerInterface {
     }
 
     /**
+     * This function converts a 2D ArrayList of integers into a 2D array of
+     * integers.
+     * 
+     * @param arrayListGrid An ArrayList of ArrayLists of Integers, representing a
+     *                      2D grid. Each inner
+     *                      ArrayList represents a row in the grid, and each Integer
+     *                      represents a cell value in that row.
+     * @return The method is returning a 2D integer array that is converted from an
+     *         ArrayList of
+     *         ArrayLists of integers.
+     */
+    private int[][] convertArrayListToArray(ArrayList<ArrayList<Integer>> arrayListGrid) {
+        int[][] grid;
+
+        int rows = arrayListGrid.size();
+        int columns = arrayListGrid.get(0).size();
+        grid = new int[rows][columns];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                grid[i][j] = arrayListGrid.get(i).get(j);
+            }
+        }
+
+        return grid;
+    }
+
+    /**
      * This function reads a text file containing a grid of integers separated by
      * commas and returns a
      * 2D array of integers.
@@ -104,20 +132,70 @@ public class FileHandler implements FileHandlerInterface {
             }
             reader.close();
 
-            int rows = arrayListGrid.size();
-            int columns = arrayListGrid.get(0).size();
-            grid = new int[rows][columns];
-
-            for (int i = 0; i < rows; i++) {
-                for (int j = 0; j < columns; j++) {
-                    grid[i][j] = arrayListGrid.get(i).get(j);
-                }
-            }
+            grid = convertArrayListToArray(arrayListGrid);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        return grid;
+    }
+
+    /**
+     * This function saves a 2D integer array as a string to a file with a given
+     * file name in the
+     * user's home directory.
+     * 
+     * @param fileName The name of the file to be saved. It should include the file
+     *                 extension (e.g.
+     *                 ".txt", ".csv").
+     * @param grid     A 2D integer array representing a grid or matrix.
+     */
+    public void saveFile(String fileName, int[][] grid) {
+        try {
+            String gridString = convertGridToString(grid);
+            FileWriter writer = new FileWriter(fileName);
+            writer.write(gridString);
+            writer.close();
+            System.out.println("File saved successfully.");
+        } catch (IOException e) {
+            System.out.println("An error occurred while saving the file: " + e.getMessage());
+        }
+    }
+
+    /**
+     * The function loads the content of a file with the given file name and returns
+     * it as a string.
+     * 
+     * @param fileName The parameter "fileName" is a String variable that represents
+     *                 the name or path
+     *                 of the file that needs to be loaded.
+     * @return The method is returning a String variable named "fileContent" which
+     *         contains the content
+     *         of the file that was loaded.
+     */
+    public int[][] loadFile(String fileName) {
+        int[][] grid = null;
+
+        try {
+            File file = new File(fileName);
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            ArrayList<ArrayList<Integer>> arrayListGrid = new ArrayList<>();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] rowValues = line.split(",");
+                ArrayList<Integer> row = new ArrayList<>();
+                for (String state : rowValues) {
+                    row.add(Integer.parseInt(state));
+                }
+                arrayListGrid.add(row);
+            }
+            reader.close();
+            grid = convertArrayListToArray(arrayListGrid);
+
+        } catch (IOException e) {
+            System.out.println("An error occurred while loading the file: " + e.getMessage());
+        }
         return grid;
     }
 }
