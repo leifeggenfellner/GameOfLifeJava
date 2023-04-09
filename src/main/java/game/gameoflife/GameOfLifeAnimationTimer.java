@@ -7,7 +7,7 @@ public class GameOfLifeAnimationTimer extends AnimationTimer {
     private final GameOfLifeCanvas gameOfLifeCanvas;
     private final GameOfLife gameOfLife;
     private long lastUpdateTime = 0;
-    private final long timeStep = TimeUnit.MILLISECONDS.toNanos(100);
+    private final long timeStep = TimeUnit.MILLISECONDS.toNanos(200);
 
     public GameOfLifeAnimationTimer(GameOfLifeCanvas gameOfLifeCanvas, GameOfLife gameOfLife) {
         this.gameOfLifeCanvas = gameOfLifeCanvas;
