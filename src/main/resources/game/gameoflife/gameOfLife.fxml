@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="game.gameoflife.GameController">
+   <Button fx:id="saveButton" layoutX="458.0" layoutY="538.0" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-border-color: #000; -fx-border-width: 1.5px; -fx-min-width: 90px;" text="Save">
+      <font>
+         <Font name="8BIT WONDER Nominal" size="16.0" />
+      </font>
+   </Button>
+   <Button fx:id="menuButton" layoutX="88.0" layoutY="538.0" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-border-color: #000; -fx-border-width: 1.5px; -fx-min-width: 90px;" text="Menu">
+      <font>
+         <Font name="8BIT WONDER Nominal" size="16.0" />
+      </font>
+   </Button>
+   <Button fx:id="stepButton" layoutX="406.0" layoutY="34.0" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-border-color: #000; -fx-border-width: 1.5px; -fx-min-width: 90px;" text="Step">
+      <font>
+         <Font name="8BIT WONDER Nominal" size="16.0" />
+      </font>
+   </Button>
+   <Button fx:id="runButton" layoutX="261.0" layoutY="34.0" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-border-color: #000; -fx-border-width: 1.5px; -fx-min-width: 110px;" text="Start">
+      <font>
+         <Font name="8BIT WONDER Nominal" size="16.0" />
+      </font>
+   </Button>
+   <Button fx:id="stopButton" layoutX="136.0" layoutY="34.0" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-border-color: #000; -fx-border-width: 1.5px; -fx-min-width: 90px;" text="Stop">
+      <font>
+         <Font name="8BIT WONDER Nominal" size="16.0" />
+      </font>
+   </Button>
+   <Button fx:id="resetButton" layoutX="264.0" layoutY="538.0" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-border-color: #000; -fx-border-width: 1.5px; -fx-min-width: 90px;" text="Reset">
+      <font>
+         <Font name="8BIT WONDER Nominal" size="16.0" />
+      </font>
+   </Button>
+   <Canvas fx:id="myCanvas" height="450.0" layoutX="91.0" layoutY="75.0" width="450.0" />
+</AnchorPane>
