@@ -18,7 +18,11 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * The type Game controller.
+ * The GameController class controls the game of life simulation, including
+ * loading and saving game
+ * states, initializing the game, and handling user input for running, stopping,
+ * and stepping through
+ * generations.
  */
 public class GameController implements Initializable {
     @FXML
@@ -27,22 +31,8 @@ public class GameController implements Initializable {
     @FXML
     private Button stepButton;
 
-    /**
-     * Handle step.
-     */
-    public void handleStep() {
-        gameOfLife.generateNextGeneration();
-        drawGrid();
-    }
-
     @FXML
     private Button resetButton;
-
-    @FXML
-    private void handleReset() {
-        gameOfLife.init();
-        drawGrid();
-    }
 
     @FXML
     private Button runButton;
@@ -52,22 +42,97 @@ public class GameController implements Initializable {
 
     @FXML
     private Button saveButton;
-    /**
-     * The Game of life canvas.
-     */
-    GameOfLifeCanvas gameOfLifeCanvas;
-    /**
-     * The Game of life.
-     */
-    GameOfLife gameOfLife;
-
-    /**
-     * The Run animation.
-     */
-    AnimationTimer runAnimation;
 
     @FXML
-    private void handleSave() {
+    Button menuButton;
+
+    private GameOfLifeCanvas gameOfLifeCanvas;
+
+    private GameOfLife gameOfLife;
+
+    private GameOfLifeAnimationTimer animationTimer;
+
+    private final int GRID_SIZE = 45;
+
+    /**
+     * This function reads a text file containing a grid of integers separated by
+     * commas and returns a
+     * 2D array of integers.
+     * 
+     * @return The method is returning a 2D integer array representing a grid read
+     *         from a text file.
+     */
+    private int[][] getBoardFromFile() {
+        int[][] grid = null;
+
+        try {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+            File boardFile = fileChooser.showOpenDialog(null);
+
+            assert boardFile != null;
+            BufferedReader reader = new BufferedReader(new FileReader(boardFile.getAbsolutePath()));
+
+            ArrayList<ArrayList<Integer>> arrayListGrid = new ArrayList<>();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] rowValues = line.split(",");
+                ArrayList<Integer> row = new ArrayList<>();
+                for (String state : rowValues) {
+                    row.add(Integer.parseInt(state));
+                }
+                arrayListGrid.add(row);
+            }
+            reader.close();
+
+            int rows = arrayListGrid.size();
+            int columns = arrayListGrid.get(0).size();
+            grid = new int[rows][columns];
+
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < columns; j++) {
+                    grid[i][j] = arrayListGrid.get(i).get(j);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return grid;
+    }
+
+    /**
+     * This function draws a grid on a canvas using the graphics context and the
+     * GameOfLifeCanvas
+     * class.
+     */
+    private void drawGrid() {
+        gameOfLifeCanvas = new GameOfLifeCanvas(myCanvas.getGraphicsContext2D());
+        gameOfLifeCanvas.draw(gameOfLife.getGrid());
+    }
+
+    /**
+     * The function resets the game of life and redraws the grid.
+     */
+    private void handleReset() {
+        gameOfLife.init();
+        drawGrid();
+        animationTimer.stop();
+    }
+
+    /**
+     * This function converts a 2D integer array into a string with comma-separated
+     * values and new line
+     * characters.
+     * 
+     * @return The method `convertGridToString()` returns a string representation of
+     *         a 2D integer array
+     *         `grid` with each row separated by a newline character and each
+     *         element in a row separated by a
+     *         comma.
+     */
+    private String convertGridToString() {
         StringBuilder builder = new StringBuilder();
         int[][] grid = gameOfLife.getGrid();
 
@@ -82,6 +147,16 @@ public class GameController implements Initializable {
             builder.append("\n");
         }
 
+        return builder.toString();
+    }
+
+    /**
+     * This function saves a game to a text file and displays an alert message with
+     * the file path.
+     */
+    private void handleSave() {
+        String gridString = convertGridToString();
+
         try {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save File");
@@ -90,7 +165,7 @@ public class GameController implements Initializable {
 
             assert file != null;
             FileOutputStream fileOutputStream = new FileOutputStream(file);
-            fileOutputStream.write(builder.toString().getBytes());
+            fileOutputStream.write(gridString.getBytes());
             fileOutputStream.close();
 
             Alert alertType = new Alert(Alert.AlertType.INFORMATION);
@@ -104,12 +179,9 @@ public class GameController implements Initializable {
     }
 
     /**
-     * The Menu button.
+     * This function loads a new FXML file for the menu and sets it as the scene for
+     * the current stage.
      */
-    @FXML
-    Button menuButton;
-
-    @FXML
     private void handleMenuChange() {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(this.getClass().getResource("menu.fxml")));
@@ -124,84 +196,59 @@ public class GameController implements Initializable {
     }
 
     /**
-     * Load game.
+     * The function generates the next generation of the Game of Life and draws the
+     * grid.
      */
-    public void loadGame() {
-            try {
-                int[][] grid = getBoardFromFile();
-                gameOfLife = new GameOfLife(grid);
-
-                drawGrid();
-            } catch (IOException e) {
-                e.printStackTrace();
-        }
-    }
-
-    private int[][] getBoardFromFile() throws IOException {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
-        File boardFile = fileChooser.showOpenDialog(null);
-
-        assert boardFile != null;
-        BufferedReader reader = new BufferedReader(new FileReader(boardFile.getAbsolutePath()));
-
-        ArrayList<ArrayList<Integer>> arrayListGrid = new ArrayList<>();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            String[] rowValues = line.split(",");
-            ArrayList<Integer> row = new ArrayList<>();
-            for (String state : rowValues) {
-                row.add(Integer.parseInt(state));
-            }
-            arrayListGrid.add(row);
-        }
-        reader.close();
-
-        int rows = arrayListGrid.size();
-        int columns = arrayListGrid.get(0).size();
-        int[][] grid = new int[rows][columns];
-
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < columns; j++) {
-                grid[i][j] = arrayListGrid.get(i).get(j);
-            }
-        }
-
-        return grid;
-    }
-
-    private void drawGrid() {
-        gameOfLifeCanvas = new GameOfLifeCanvas(myCanvas.getGraphicsContext2D());
-        gameOfLifeCanvas.draw(gameOfLife.getGrid());
-    }
-
-
-
-    public void initGame() {
-        gameOfLife = new GameOfLife(45, 45);
-        gameOfLife.init();
+    public void handleStep() {
+        gameOfLife.generateNextGeneration();
         drawGrid();
     }
+
+    /**
+     * The function loads a game of life by getting a board from a file, creating a
+     * new game of life
+     * with the board, and drawing the grid.
+     */
+    public void loadGame() {
+        int[][] grid = getBoardFromFile();
+        gameOfLife = new GameOfLife(grid);
+        drawGrid();
+        animationTimer = new GameOfLifeAnimationTimer(gameOfLifeCanvas, gameOfLife);
+    }
+
+    /**
+     * The function initializes a GameOfLife object with a grid size of GRID_SIZE
+     * and draws the grid.
+     */
+    public void initGame() {
+        gameOfLife = new GameOfLife(GRID_SIZE, GRID_SIZE);
+        gameOfLife.init();
+        drawGrid();
+        animationTimer = new GameOfLifeAnimationTimer(gameOfLifeCanvas, gameOfLife);
+    }
+
+    /**
+     * This function initializes event handlers for various buttons in a Java
+     * program.
+     * 
+     * @param location  The location of the FXML file that contains the UI layout
+     *                  for the controller. It
+     *                  is a URL object that represents the location of the
+     *                  resource.
+     * @param resources The ResourceBundle object contains locale-specific
+     *                  resources. It is used to
+     *                  retrieve localized values for keys in a properties file. In
+     *                  JavaFX, it is often used to store
+     *                  strings and other resources that are specific to a
+     *                  particular language or region.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        runAnimation = new AnimationTimer() {
-            private long lastUpdate = 0;
-
-            @Override
-            public void handle(long now) {
-                if ((now - lastUpdate) >= TimeUnit.MILLISECONDS.toNanos(500)) {
-                    gameOfLife.generateNextGeneration();
-                    drawGrid();
-                    lastUpdate = now;
-                }
-            }
-        };
-
         resetButton.setOnAction(event -> handleReset());
         menuButton.setOnAction(event -> handleMenuChange());
         saveButton.setOnAction(event -> handleSave());
         stepButton.setOnAction(event -> handleStep());
-        runButton.setOnAction(event -> runAnimation.start());
-        stopButton.setOnAction(event -> runAnimation.stop());
+        runButton.setOnAction(event -> animationTimer.start());
+        stopButton.setOnAction(event -> animationTimer.stop());
     }
 }

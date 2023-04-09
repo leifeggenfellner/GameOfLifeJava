@@ -7,21 +7,21 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="game.gameoflife.MenuController">
-   <Button fx:id="newGameButton" layoutX="188.0" layoutY="194.0" mnemonicParsing="false" onAction="#handleNewGame"
+   <Button fx:id="newGameButton" layoutX="188.0" layoutY="194.0" mnemonicParsing="false"
            style="-fx-background-color: transparent; -fx-border-color: black; -fx-border-width: 2px; -fx-max-width: 225px; -fx-min-width: 225px;"
            text="NEW GAME">
       <font>
          <Font name="8BIT WONDER Nominal" size="20.0"/>
       </font>
    </Button>
-   <Button fx:id="loadGameButton" layoutX="189.0" layoutY="249.0" mnemonicParsing="false" onAction="#handleLoadGame"
+   <Button fx:id="loadGameButton" layoutX="189.0" layoutY="249.0" mnemonicParsing="false"
            style="-fx-background-color: transparent; -fx-border-color: black; -fx-border-width: 2px; -fx-max-width: 225px; -fx-min-width: 225px;"
            text="LOAD GAME">
       <font>
          <Font name="8BIT WONDER Nominal" size="20.0"/>
       </font>
    </Button>
-   <Button fx:id="exitButton" layoutX="188.0" layoutY="304.0" mnemonicParsing="false" onAction="#exit"
+   <Button fx:id="exitButton" layoutX="188.0" layoutY="304.0" mnemonicParsing="false"
            style="-fx-background-color: transparent; -fx-min-width: 225px; -fx-max-width: 225px; -fx-border-color: black; -fx-border-width: 2px;"
            text="EXIT">
       <font>

@@ -1,29 +1,36 @@
 package game.gameoflife;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.Objects;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
+/**
+ * The Main class loads a menu.fxml file and sets it as the scene for a JavaFX
+ * stage.
+ */
 public class Main extends Application {
-    private static final int cellSize = 10;
-
+    /**
+     * This is the main function that launches a Java program.
+     */
     public static void main(String[] args) {
         launch(args);
     }
 
+    /**
+     * This function loads a menu.fxml file and sets it as the scene for a JavaFX
+     * stage.
+     * 
+     * @param stage The stage parameter is an instance of the Stage class, which
+     *              represents the
+     *              top-level container for a JavaFX application. It is responsible
+     *              for managing the application
+     *              window and its associated scene graph.
+     */
     public void start(Stage stage) {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(this.getClass().getResource("menu.fxml")));
@@ -31,7 +38,7 @@ public class Main extends Application {
             stage.setScene(scene);
             stage.setResizable(false);
             stage.show();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
