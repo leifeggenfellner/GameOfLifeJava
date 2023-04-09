@@ -38,6 +38,7 @@ public class GameOfLifeCanvas implements CanvasInterface {
      *             empty cell and a non-zero value
      *             indicating a filled cell.
      */
+    @Override
     public void draw(int[][] grid) {
         cellSize = height / grid.length;
         graphicsContext.setFill(Color.WHITE);
