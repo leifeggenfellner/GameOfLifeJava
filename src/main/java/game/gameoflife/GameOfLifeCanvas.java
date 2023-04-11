@@ -10,7 +10,6 @@ import javafx.scene.paint.Color;
  */
 public class GameOfLifeCanvas implements CanvasInterface {
 
-    private int cellSize;
     private final GraphicsContext graphicsContext;
 
     private final int width;
@@ -40,7 +39,7 @@ public class GameOfLifeCanvas implements CanvasInterface {
      */
     @Override
     public void draw(int[][] grid) {
-        cellSize = height / grid.length;
+        int cellSize = height / grid.length;
         graphicsContext.setFill(Color.WHITE);
         graphicsContext.fillRect(0, 0, width, height);
 
