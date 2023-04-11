@@ -43,7 +43,6 @@ public class GameOfLifeTest {
     @Test
     public void testTick() {
         GameOfLife game = new GameOfLife(10, 10);
-        game.emptyGrid();
         game.setCellState(1, 1, 1);
         game.setCellState(2, 2, 1);
         game.setCellState(3, 3, 1);
@@ -60,7 +59,6 @@ public class GameOfLifeTest {
     @Test
     public void testEmptyGrid() {
         GameOfLife game = new GameOfLife(10, 10);
-        game.emptyGrid();
         game.tick();
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
@@ -77,7 +75,6 @@ public class GameOfLifeTest {
     @Test
     public void testGliderPattern() {
         GameOfLife game = new GameOfLife(10, 10);
-        game.emptyGrid();
         game.setCellState(2, 1, 1);
         game.setCellState(3, 2, 1);
         game.setCellState(1, 3, 1);

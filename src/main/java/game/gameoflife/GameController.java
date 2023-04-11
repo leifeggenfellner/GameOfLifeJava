@@ -23,26 +23,19 @@ import java.util.*;
  * generations.
  */
 public class GameController implements Initializable {
-    @FXML
-    private Canvas myCanvas;
+    @FXML private Canvas myCanvas;
 
-    @FXML
-    private Button stepButton;
+    @FXML private Button stepButton;
 
-    @FXML
-    private Button resetButton;
+    @FXML private Button resetButton;
 
-    @FXML
-    private Button runButton;
+    @FXML private Button runButton;
 
-    @FXML
-    private Button stopButton;
+    @FXML private Button stopButton;
 
-    @FXML
-    private Button saveButton;
+    @FXML private Button saveButton;
 
-    @FXML
-    Button menuButton;
+    @FXML private Button menuButton;
 
     private GameOfLifeCanvas gameOfLifeCanvas;
 
