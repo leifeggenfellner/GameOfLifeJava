@@ -110,7 +110,7 @@ public class FileHandler implements FileHandlerInterface {
      *         from a text file.
      */
     public int[][] loadFile() {
-        int[][] grid = null;
+        int[][] grid;
 
         try {
             FileChooser fileChooser = new FileChooser();
@@ -119,26 +119,14 @@ public class FileHandler implements FileHandlerInterface {
 
             assert boardFile != null;
             BufferedReader reader = new BufferedReader(new FileReader(boardFile.getAbsolutePath()));
-
-            ArrayList<ArrayList<Integer>> arrayListGrid = new ArrayList<>();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] rowValues = line.split(",");
-                ArrayList<Integer> row = new ArrayList<>();
-                for (String state : rowValues) {
-                    row.add(Integer.parseInt(state));
-                }
-                arrayListGrid.add(row);
-            }
-            reader.close();
-
-            grid = convertArrayListToArray(arrayListGrid);
+            grid = getInts(reader);
+            return grid;
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return grid;
+        return null;
     }
 
     /**
@@ -180,22 +168,26 @@ public class FileHandler implements FileHandlerInterface {
         try {
             File file = new File(fileName);
             BufferedReader reader = new BufferedReader(new FileReader(file));
-            ArrayList<ArrayList<Integer>> arrayListGrid = new ArrayList<>();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] rowValues = line.split(",");
-                ArrayList<Integer> row = new ArrayList<>();
-                for (String state : rowValues) {
-                    row.add(Integer.parseInt(state));
-                }
-                arrayListGrid.add(row);
-            }
-            reader.close();
-            grid = convertArrayListToArray(arrayListGrid);
+            grid = getInts(reader);
 
         } catch (IOException e) {
             System.out.println("An error occurred while loading the file: " + e.getMessage());
         }
         return grid;
+    }
+
+    private int[][] getInts(BufferedReader reader) throws IOException {
+        ArrayList<ArrayList<Integer>> arrayListGrid = new ArrayList<>();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] rowValues = line.split(",");
+            ArrayList<Integer> row = new ArrayList<>();
+            for (String state : rowValues) {
+                row.add(Integer.parseInt(state));
+            }
+            arrayListGrid.add(row);
+        }
+        reader.close();
+        return convertArrayListToArray(arrayListGrid);
     }
 }

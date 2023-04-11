@@ -1,6 +1,5 @@
 package game.gameoflife;
 
-import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -159,11 +158,5 @@ public class GameOfLife {
         }
 
         return grid[row][column] != 0;
-    }
-
-    public void emptyGrid() {
-        for (int i = 0; i < rows; i++) {
-            Arrays.fill(grid[i], 0);
-        }
     }
 }
