@@ -1,5 +1,6 @@
 package game.gameoflife;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,6 +15,7 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * The GameController class controls the game of life simulation, including
@@ -23,27 +25,32 @@ import java.util.*;
  * generations.
  */
 public class GameController implements Initializable {
-    @FXML private Canvas myCanvas;
+    @FXML
+    private Canvas myCanvas;
 
-    @FXML private Button stepButton;
+    @FXML
+    private Button stepButton;
 
-    @FXML private Button resetButton;
+    @FXML
+    private Button resetButton;
 
-    @FXML private Button runButton;
+    @FXML
+    private Button runButton;
 
-    @FXML private Button stopButton;
+    @FXML
+    private Button stopButton;
 
-    @FXML private Button saveButton;
+    @FXML
+    private Button saveButton;
 
-    @FXML private Button menuButton;
+    @FXML
+    private Button menuButton;
 
     private GameOfLifeCanvas gameOfLifeCanvas;
 
     private GameOfLife gameOfLife;
 
     private GameOfLifeAnimationTimer animationTimer;
-
-    private FileHandler fileHandler;
 
     /**
      * This function draws a grid on a canvas using the graphics context and the
@@ -85,7 +92,7 @@ public class GameController implements Initializable {
      * This function saves the current state of the game grid using a file handler.
      */
     public void handleSave() {
-        fileHandler.saveFile(gameOfLife.getGrid());
+        FileHandler.saveFile(gameOfLife.getGrid());
     }
 
     /**
@@ -98,15 +105,23 @@ public class GameController implements Initializable {
     }
 
     /**
-     * The function loads a game of life grid from a file, creates a new game of
-     * life object, draws the
-     * grid, and sets up an animation timer.
+     * The loadGame function loads a file asynchronously and initializes a
+     * GameOfLife object if the
+     * file is not null.
      */
     public void loadGame() {
-        int[][] grid = fileHandler.loadFile();
-        gameOfLife = new GameOfLife(grid);
-        drawGrid();
-        animationTimer = new GameOfLifeAnimationTimer(gameOfLifeCanvas, gameOfLife);
+        CompletableFuture<int[][]> future = FileHandler.loadFile();
+        int[][] grid = future.join(); // This blocks until the future completes
+
+        if (grid != null) {
+            Platform.runLater(() -> {
+                gameOfLife = new GameOfLife(grid);
+                drawGrid();
+                animationTimer = new GameOfLifeAnimationTimer(gameOfLifeCanvas, gameOfLife);
+            });
+        } else {
+            System.out.println("Error loading file.");
+        }
     }
 
     /**
@@ -138,8 +153,6 @@ public class GameController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        fileHandler = new FileHandler();
-
         resetButton.setOnAction(event -> handleReset());
         menuButton.setOnAction(event -> handleMenuChange());
         saveButton.setOnAction(event -> handleSave());

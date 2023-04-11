@@ -5,6 +5,7 @@ import javafx.stage.FileChooser;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * The FileHandler class provides methods for saving and loading a 2D integer
@@ -20,7 +21,7 @@ public class FileHandler implements FileHandlerInterface {
      * 
      * @param grid a 2D integer array representing a grid or matrix.
      */
-    public void saveFile(int[][] grid) {
+    public static void saveFile(int[][] grid) {
         try {
             String gridString = convertGridToString(grid);
 
@@ -56,7 +57,7 @@ public class FileHandler implements FileHandlerInterface {
      *         row is separated by a newline character and each element in a row is
      *         separated by a comma.
      */
-    private String convertGridToString(int[][] grid) {
+    private static String convertGridToString(int[][] grid) {
         StringBuilder builder = new StringBuilder();
 
         for (int[] ints : grid) {
@@ -85,7 +86,7 @@ public class FileHandler implements FileHandlerInterface {
      *         ArrayList of
      *         ArrayLists of integers.
      */
-    private int[][] convertArrayListToArray(ArrayList<ArrayList<Integer>> arrayListGrid) {
+    private static int[][] convertArrayListToArray(ArrayList<ArrayList<Integer>> arrayListGrid) {
         int[][] grid;
 
         int rows = arrayListGrid.size();
@@ -102,31 +103,47 @@ public class FileHandler implements FileHandlerInterface {
     }
 
     /**
-     * This function reads a text file containing a grid of integers separated by
-     * commas and returns a
-     * 2D array of integers.
-     *
-     * @return The method is returning a 2D integer array representing a grid read
-     *         from a text file.
+     * This Java function loads a text file containing integers into a 2D array
+     * using a
+     * CompletableFuture.
+     * 
+     * @return A `CompletableFuture` object that will eventually contain a 2D
+     *         integer array
+     *         representing the contents of a text file selected by the user through
+     *         a file chooser dialog.
      */
-    public int[][] loadFile() {
-        int[][] grid;
+    public static CompletableFuture<int[][]> loadFile() {
+        CompletableFuture<int[][]> future = new CompletableFuture<>();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+        File boardFile = fileChooser.showOpenDialog(null);
+
+        if (boardFile == null) {
+            future.complete(null);
+            return future;
+        }
 
         try {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
-            File boardFile = fileChooser.showOpenDialog(null);
-
-            assert boardFile != null;
             BufferedReader reader = new BufferedReader(new FileReader(boardFile.getAbsolutePath()));
-            grid = getInts(reader);
-            return grid;
+
+            Thread loadThread = new Thread(() -> {
+                int[][] grid;
+                try {
+                    grid = getInts(reader);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                future.complete(grid);
+            });
+            loadThread.start();
 
         } catch (IOException e) {
             e.printStackTrace();
+            future.complete(null);
         }
 
-        return null;
+        return future;
     }
 
     /**
@@ -141,7 +158,7 @@ public class FileHandler implements FileHandlerInterface {
      */
     public void saveFile(String fileName, int[][] grid) {
         try {
-            String gridString = convertGridToString(grid);
+            String gridString = FileHandler.convertGridToString(grid);
             FileWriter writer = new FileWriter(fileName);
             writer.write(gridString);
             writer.close();
@@ -176,7 +193,16 @@ public class FileHandler implements FileHandlerInterface {
         return grid;
     }
 
-    private int[][] getInts(BufferedReader reader) throws IOException {
+    /**
+     * This function reads a matrix of integers from a BufferedReader and converts
+     * it into a 2D array.
+     * 
+     * @param reader The parameter "reader" is a BufferedReader object that is used
+     *               to read input from
+     *               a file or other input stream.
+     * @return The method `getInts` is returning a 2D integer array.
+     */
+    private static int[][] getInts(BufferedReader reader) throws IOException {
         ArrayList<ArrayList<Integer>> arrayListGrid = new ArrayList<>();
         String line;
         while ((line = reader.readLine()) != null) {

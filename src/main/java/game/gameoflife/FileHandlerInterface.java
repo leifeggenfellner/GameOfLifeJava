@@ -1,28 +1,39 @@
 package game.gameoflife;
 
+import java.util.concurrent.CompletableFuture;
+
 // This is a Java interface called `FileHandlerInterface` that defines two methods: `saveFile` and
 // `loadFile`. The `saveFile` method takes a two-dimensional integer array as input and is responsible
 // for saving it to a file. The `loadFile` method returns a two-dimensional integer array that has been
 // loaded from a file. Any class that implements this interface must provide implementations for both
 // methods.
 public interface FileHandlerInterface {
+
     /**
-     * This function saves a two-dimensional integer array to a file.
+     * The function "saveFile" takes a 2D integer array as input and does not have
+     * any implementation.
      * 
      * @param grid The parameter "grid" is a two-dimensional integer array that
      *             represents a grid or
-     *             matrix of values. It could be a representation of a game board, a
-     *             map, or any other type of
-     *             grid-based data structure. The function "saveFile" takes this
-     *             grid as input and is responsible
-     *             for saving it
+     *             matrix. It is likely that this method is intended to save the
+     *             contents of this grid to a file.
+     * 
      */
-    void saveFile(int[][] grid);
+    static void saveFile(int[][] grid) {
+    }
 
     /**
-     * The function "loadFile" returns a two-dimensional integer array in Java.
+     * The function "loadFile" returns a CompletableFuture object that will
+     * eventually contain a
+     * two-dimensional integer array.
      * 
-     * @return A two-dimensional integer array is being returned.
+     * @return A `CompletableFuture` object that will eventually contain a
+     *         two-dimensional integer
+     *         array (`int[][]`). However, the method is currently returning `null`,
+     *         so it is not actually
+     *         returning anything useful at the moment.
      */
-    int[][] loadFile();
+    static CompletableFuture<int[][]> loadFile() {
+        return null;
+    }
 }
