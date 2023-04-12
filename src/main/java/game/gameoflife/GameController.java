@@ -111,7 +111,7 @@ public class GameController implements Initializable {
      */
     public void loadGame() {
         CompletableFuture<int[][]> future = FileHandler.loadFile();
-        int[][] grid = future.join(); // This blocks until the future completes
+        int[][] grid = future.join();
 
         if (grid != null) {
             Platform.runLater(() -> {
