@@ -12,6 +12,9 @@ target/
 *.iml
 *.ipr
 
+### Documentation ###
+documentation.pdf
+
 ### Eclipse ###
 .apt_generated
 .classpath
